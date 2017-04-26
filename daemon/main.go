@@ -461,6 +461,21 @@ func initEnv() {
 
 	config.NodeAddress = nodeAddress
 
+	if config.K8sEndpoint == "" {
+		host := os.Getenv("KUBERNETES_SERVICE_HOST")
+		port := os.Getenv("KUBERNETES_SERVICE_PORT")
+		if len(host) != 0 && len(port) != 0 {
+			if port == "80" {
+				config.K8sEndpoint = "http://" + host + ":" + port
+			} else {
+				config.K8sEndpoint = "https://" + host + ":" + port
+			}
+
+			log.Infof("Running inside k8s pod, found API server: %s",
+				config.K8sEndpoint)
+		}
+	}
+
 	if config.IsK8sEnabled() && !strings.HasPrefix(config.K8sEndpoint, "http") {
 		config.K8sEndpoint = "http://" + config.K8sEndpoint
 	}
