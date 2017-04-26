@@ -345,7 +345,7 @@ func (d *Daemon) useK8sNodeCIDR(nodeName string) error {
 		return err
 	}
 	if k8sNode.Spec.PodCIDR == "" {
-		return fmt.Errorf("Empty PodCIDR defined in kubernetes spec for node %s", nodeName)
+		return nil
 	}
 	ip, _, err := net.ParseCIDR(k8sNode.Spec.PodCIDR)
 	if err != nil {
